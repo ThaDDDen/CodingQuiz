@@ -1,5 +1,6 @@
-import { StyleSheet } from "react-native";
 import styled from "styled-components/native";
+import { useSound } from "../../contexts/SoundContext";
+import STMText from "../Texts/ShareTechMonoText";
 
 interface Props {
   title: string;
@@ -9,10 +10,13 @@ interface Props {
 }
 
 const CategoryButton = ({ title, img, color, onPress }: Props) => {
+  const { playButtonEffect } = useSound();
   return (
-    <Button activeOpacity={0.8} color={color} onPress={onPress}>
+    <Button activeOpacity={0.8} color={color} onPress={onPress} onPressIn={() => playButtonEffect()}>
       <CardImage source={img} />
-      <Title>{title}</Title>
+      <Title size={30} uppercase>
+        {title}
+      </Title>
     </Button>
   );
 };
@@ -28,12 +32,7 @@ const Button = styled.TouchableOpacity<{ color: string }>`
   padding: 10px 0;
   margin-bottom: 21px;
 `;
-const Title = styled.Text`
-  font-family: "ShareTechMono";
-  color: white;
-  font-size: 30px;
-  text-transform: uppercase;
-`;
+const Title = styled(STMText)``;
 const CardImage = styled.Image`
   height: 71px;
   width: 71px;
@@ -41,5 +40,3 @@ const CardImage = styled.Image`
   elevation: 2;
   shadowcolor: black;
 `;
-
-const styles = StyleSheet.create({});

@@ -1,16 +1,22 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, Easing } from "react-native";
 import styled from "styled-components/native";
-import { RootStackParams } from "../App";
-import Background from "../Components/Background";
-import TopSection from "../Components/TopSection";
+import { useSound } from "../../contexts/SoundContext";
+import TopSection from "../Layout/TopSection";
+import STMText from "../Texts/ShareTechMonoText";
 
-type Props = NativeStackScreenProps<RootStackParams, "GetReady">;
+interface Props {
+  setCountingDown: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-const GetReadyScreen = ({ navigation, route }: Props) => {
+const CountDown = ({ setCountingDown }: Props) => {
   const animatedCounter = useRef(new Animated.Value(3)).current;
   const [counter, setCounter] = useState("");
+  const { playGetReadySound } = useSound();
+
+  useEffect(() => {
+    playGetReadySound();
+  }, []);
 
   const animate = () => {
     return Animated.timing(animatedCounter, {
@@ -19,8 +25,8 @@ const GetReadyScreen = ({ navigation, route }: Props) => {
       easing: Easing.linear,
       useNativeDriver: true,
     }).start(async () => {
-      await new Promise((f) => setTimeout(f, 500));
-      navigation.navigate("Game", { category: route.params.category });
+      await new Promise((f) => setTimeout(f, 1000));
+      setCountingDown(false);
     });
   };
 
@@ -33,22 +39,21 @@ const GetReadyScreen = ({ navigation, route }: Props) => {
       animatedCounter.removeAllListeners();
     };
   }, []);
+
   return (
-    <Background>
+    <>
       <TopSection title="get ready" />
       <Animated.View style={{ marginTop: 100 }}>
-        <Counter>{counter}</Counter>
+        <Counter size={150} center>
+          {counter}
+        </Counter>
       </Animated.View>
-    </Background>
+    </>
   );
 };
 
-export default GetReadyScreen;
+export default CountDown;
 
-const Counter = styled.Text`
-  align-self: center;
+const Counter = styled(STMText)`
   margin: auto 0;
-  color: white;
-  font-size: 150px;
-  font-family: ShareTechMono;
 `;

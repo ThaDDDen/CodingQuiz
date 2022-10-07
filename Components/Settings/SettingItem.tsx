@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Switch, View } from "react-native";
+import { useHaptics } from "../../contexts/HapticsContext";
 import { useTheme } from "../../contexts/ThemeContext";
 import { SettingModel } from "../../models/SettingModel";
-import { colors } from "../../Styles/Shared";
-import { MdText, SmText } from "../../Styles/texts";
 import { FlexBox } from "../../Styles/views";
+import RegularText from "../Texts/RegularText";
 
 interface Props {
   item: SettingModel;
@@ -12,20 +12,22 @@ interface Props {
   setToggleValue: (item: SettingModel) => boolean;
 }
 const SettingItem = ({ item, handleToggle, setToggleValue }: Props) => {
-  const [isEnabled, setIsEnabled] = useState(item.isEnabled);
   const { themeColors } = useTheme();
+  const { hapticsSuccess } = useHaptics();
   return (
     <FlexBox>
       <View>
-        <MdText style={{ color: themeColors.commons.white }}>{item.title}</MdText>
-        <SmText style={{ color: themeColors.commons.white }}>{item.desc}</SmText>
+        <RegularText size={20}>{item.title}</RegularText>
+        <RegularText size={14}>{item.desc}</RegularText>
       </View>
       <View>
         <Switch
-          trackColor={{ false: colors.lightGrey, true: colors.lightGreen }}
-          thumbColor={isEnabled ? "#fff" : colors.deepPurple}
-          ios_backgroundColor={colors.deepPurple}
-          onValueChange={(value) => handleToggle(value, item)}
+          trackColor={{ false: themeColors.lightGrey, true: themeColors.lightGreen }}
+          thumbColor={"#fff"}
+          ios_backgroundColor={themeColors.deepPurple}
+          onValueChange={(value) => {
+            handleToggle(value, item), hapticsSuccess();
+          }}
           value={setToggleValue(item)}
         />
       </View>

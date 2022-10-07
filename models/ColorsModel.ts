@@ -6,6 +6,7 @@ export interface colorsModel {
   lightGrey: string;
   mustard: string;
   success: string;
+  danger: string;
   categories: {
     react: string;
     html: string;
@@ -22,5 +23,9 @@ export interface colorsModel {
   commons: {
     white: string;
     black: string;
+  };
+  backgrounds: {
+    superLowOpacity: string;
+    lowOpacity: string;
   };
 }
